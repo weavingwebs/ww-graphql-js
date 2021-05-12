@@ -127,22 +127,24 @@ export const graphqlClient = (clientFactory: () => Promise<AxiosInstance>) => {
 type WalkObjectCallback = (v: any, path: string) => boolean;
 
 function doWalkObject(obj: any, fn: WalkObjectCallback, path: string) {
-  if (Array.isArray(obj)) {
-    obj.forEach((v, i) => {
-      if (doWalkObject(v, fn, makePath(path, i)) === false) {
-        obj[i] = null;
-      }
-    })
-    return;
-  }
+  if (obj !== null) {
+    if (Array.isArray(obj)) {
+      obj.forEach((v, i) => {
+        if (doWalkObject(v, fn, makePath(path, i)) === false) {
+          obj[i] = null;
+        }
+      })
+      return;
+    }
 
-  if (typeof obj === 'object' && !(obj instanceof File)) {
-    Object.keys(obj).forEach(k => {
-      if (doWalkObject(obj[k], fn, makePath(path, k)) === false) {
-        obj[k] = null;
-      }
-    })
-    return;
+    if (typeof obj === 'object' && !(obj instanceof File)) {
+      Object.keys(obj).forEach(k => {
+        if (doWalkObject(obj[k], fn, makePath(path, k)) === false) {
+          obj[k] = null;
+        }
+      })
+      return;
+    }
   }
 
   return fn(obj, path);
