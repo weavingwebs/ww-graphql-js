@@ -1,6 +1,6 @@
 {
   "name": "@weavingwebs/ww-graphql-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
