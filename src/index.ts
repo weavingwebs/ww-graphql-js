@@ -13,13 +13,15 @@ interface GraphQlResponse<T> {
   errors?: GraphQlErrorObj[];
 }
 
+const GraphQlErrorName = 'GraphQlError';
+
 export class GraphQlError extends Error {
   public codes: number[] = [];
   public errors: GraphQlErrorObj[] = [];
 
   constructor(message?: string) {
     super(message);
-    this.name = 'GraphQlError';
+    this.name = GraphQlErrorName;
     if (typeof Error.captureStackTrace === 'function') {
       Error.captureStackTrace(this, this.constructor);
     } else {
@@ -44,7 +46,7 @@ export class GraphQlError extends Error {
   }
 
   public static fromError(err: Error | GraphQlError): GraphQlError | null {
-    if (err.name === GraphQlError.name) {
+    if (err.name === GraphQlErrorName) {
       return err as GraphQlError;
     }
     return null;
