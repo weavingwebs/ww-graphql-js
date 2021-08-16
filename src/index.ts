@@ -1,9 +1,11 @@
 import { AxiosInstance } from 'axios';
 
+type ErrorCode = number|string;
+
 type GraphQlErrorObj = {
   message: string;
   extensions?: {
-    code: number;
+    code: ErrorCode;
   };
   path?: string[];
 };
@@ -16,7 +18,7 @@ interface GraphQlResponse<T> {
 const GraphQlErrorName = 'GraphQlError';
 
 export class GraphQlError extends Error {
-  public codes: number[] = [];
+  public codes: ErrorCode[] = [];
   public errors: GraphQlErrorObj[] = [];
 
   constructor(message?: string) {
@@ -52,7 +54,7 @@ export class GraphQlError extends Error {
     return null;
   }
 
-  public static hasErrorCode(err: Error | GraphQlError, code: number): boolean {
+  public static hasErrorCode(err: Error | GraphQlError, code: ErrorCode): boolean {
     const gqlErr = GraphQlError.fromError(err);
     if (!gqlErr) {
       return false;
