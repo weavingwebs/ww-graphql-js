@@ -75,7 +75,8 @@ export const graphqlClient = (clientFactory: () => Promise<AxiosInstance>) => {
     const map: {[key: string]: string[]} = {};
     const files: {[key: string]: File} = {};
     walkObject(variables, (v, path) => {
-      if (v instanceof File) {
+      // @todo support node.js files/streams/buffers?
+      if (typeof window !== 'undefined' && v instanceof File) {
         const i = Object.keys(map).length;
         map[`${i}`] = [`variables.${path}`];
         files[`${i}`] = v;
@@ -141,7 +142,8 @@ function doWalkObject(obj: any, fn: WalkObjectCallback, path: string) {
       return;
     }
 
-    if (typeof obj === 'object' && !(obj instanceof File)) {
+    // @todo support node.js files/streams/buffers?
+    if (typeof obj === 'object' && !(typeof window !== 'undefined' && obj instanceof File)) {
       Object.keys(obj).forEach(k => {
         if (doWalkObject(obj[k], fn, makePath(path, k)) === false) {
           obj[k] = null;
