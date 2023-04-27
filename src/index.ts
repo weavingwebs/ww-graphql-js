@@ -67,6 +67,7 @@ export const graphqlClient = (clientFactory: () => Promise<AxiosInstance>) => {
   return async <TQueryResponse, TQueryVariables = undefined>(
     query: string|string[],
     variables?: TQueryVariables,
+    headers: {[key: string]: string} = {},
   ): Promise<TQueryResponse> => {
     // Join multiple queries into one string.
     query = Array.isArray(query) ? query.join('\n') : query;
@@ -88,9 +89,7 @@ export const graphqlClient = (clientFactory: () => Promise<AxiosInstance>) => {
     // If the variables contain files, we need to switch to doing a form post
     // instead.
     let body: string|FormData;
-    let headers: {[key: string]: string} = {
-      Accept: 'application/json',
-    };
+    headers.Accept = 'application/json';
     if (Object.keys(map).length !== 0) {
       const form = new FormData();
       form.set('operations', JSON.stringify({
